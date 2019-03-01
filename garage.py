@@ -75,7 +75,7 @@ class device_handler(debounce_handler):
         GPIO.add_event_detect(self.sensor_ports[str('top')], GPIO.RISING, callback=self.callback_top, bouncetime=200)  # add rising edge detection on top sensor
 
         # Make sure the door isn't already open - close it for security
-        if GPIO.input(4) == True:
+        if GPIO.input(self.sensor_ports[str('floor')]) == True:
           self.status = self.Status.CLOSING
           self.activate_door(gpio_ports[str('Garage Door')])
 

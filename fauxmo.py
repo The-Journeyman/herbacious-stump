@@ -106,8 +106,7 @@ class upnp_device(object):
         return upnp_device.this_host_ip
 
 
-    def __init__(self, listener, poller, port, root_url, server_version, persistent_uuid, other_headers = 
-None, ip_address = None):
+    def __init__(self, listener, poller, port, root_url, server_version, persistent_uuid, other_headers = None, ip_address = None):
         self.listener = listener
         self.poller = poller
         self.port = port
@@ -146,8 +145,7 @@ None, ip_address = None):
                 self.poller.remove(self, fileno)
                 del(self.client_sockets[fileno])
             else:
-                self.handle_request(data, sender, self.client_sockets[fileno][0], self.client_sockets[file
-no][1])
+                self.handle_request(data, sender, self.client_sockets[fileno][0], self.client_sockets[fileno][1])
 
     def handle_request(self, data, sender, socket, client_address):
         pass
@@ -168,8 +166,7 @@ no][1])
                   "01-NLS: %s\r\n"
                   "SERVER: %s\r\n"
                   "ST: %s\r\n"
-                  "USN: uuid:%s::%s\r\n" % (date_str, location_url, self.uuid, self.server_version, search
-_target, self.persistent_uuid, search_target))
+                  "USN: uuid:%s::%s\r\n" % (date_str, location_url, self.uuid, self.server_version, search_target, self.persistent_uuid, search_target))
         if self.other_headers:
             for header in self.other_headers:
                 message += "%s\r\n" % header
@@ -183,8 +180,7 @@ _target, self.persistent_uuid, search_target))
 class fauxmo(upnp_device):
     @staticmethod
     def make_uuid(name):
-        return ''.join(["%x" % sum([ord(c) for c in name])] + ["%x" % ord(c) for c in "%sfauxmo!" % name])
-[:14]
+        return ''.join(["%x" % sum([ord(c) for c in name])] + ["%x" % ord(c) for c in "%sfauxmo!" % name])[:14]
 
     def __init__(self, name, listener, poller, ip_address, port, action_handler = None):
         self.serial = self.make_uuid(name)
@@ -192,8 +188,7 @@ class fauxmo(upnp_device):
         self.ip_address = ip_address
         persistent_uuid = "Socket-1_0-" + self.serial
         other_headers = ['X-User-Agent: redsonic']
-        upnp_device.__init__(self, listener, poller, port, "http://%(ip_address)s:%(port)s/setup.xml", "Un
-specified, UPnP/1.0, Unspecified", persistent_uuid, other_headers=other_headers, ip_address=ip_address)
+        upnp_device.__init__(self, listener, poller, port, "http://%(ip_address)s:%(port)s/setup.xml", "Unspecified, UPnP/1.0, Unspecified", persistent_uuid, other_headers=other_headers, ip_address=ip_address)
         if action_handler:
             self.action_handler = action_handler
         else:
